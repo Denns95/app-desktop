@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add A New Product</title>
+  <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+</head>
+
+<body>
+
+  <form action="" class="p-4">
+    <div class="form-group">
+      <input type="text" id="name" class="form-control" placeholder="Products's Name" autofocus>
+    </div>
+    <div class="form-group">
+      <input type="text" id="price" class="form-control" placeholder="Price">
+    </div>
+    <div class="form-group">
+      <input type="text" id="description" class="form-control" placeholder="Description">
+    </div>
+    <button class="btn btn-primary btn-block">Save Product</button>
+  </form>
+
+  <script>
+
+    const { ipcRenderer } = require('electron');
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const form = document.querySelector('form')
+      const input = form.getElementsByTagName('input')
+
+      let inputList = []
+
+      for (let i = 0; i < input.length; i++) {
+        inputList.push(input[i].id)
+      }
+
+      form.addEventListener('submit', e => {
+        let newProduct = {};
+
+        inputList.map(element => {
+          const tags = document.getElementById(element);
+          const values = tags.value
+          newProduct[element] = values
+        });
+
+        console.log(newProduct)
+        ipcRenderer.send('product:new', newProduct)
+        e.preventDefault();
+
+      })
+    })
+  </script>
+</body>
+
+</html>
